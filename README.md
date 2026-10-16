@@ -66,39 +66,18 @@ Under these assumptions, the model saves about **€3.2M** in 2017. This is an u
 
 ## Known limitations
 
-- Duplicate rows (about 32,000) are still in the data, and the dataset has no booking ID.
-- Features were picked using correlations on all the data, including 2017. This is a small leak.
-- Some features may not be known at booking time: `assigned_room_type`, `booking_changes` and possibly `country`.
+- Some features may not be known at booking time: `assigned_room_type`, `booking_changes` and possibly `country`. Might be a leak problem. 
 - 2017 only covers arrivals up to August.
 
 ## Suggested next steps
 
-**Fixes first**
-1. Remove `arrival_date_year` from the features. The model never sees 2017 in training, so this feature can't help. Use `df.loc[X.index, "arrival_date_year"]` for the split instead.
-2. Remove `assigned_room_type` (usually set at check-in) and test the model with and without `booking_changes` and `country`.
-3. Decide what to do with duplicates: drop them, or explain why you keep them. Then re-run everything.
-4. Pick features using the training years only (2015–2016), not all the data.
-5. Update the notes so they match the new outputs.
-
-**Improve the money estimate**
-
-6. Calculate the value of each booking (`adr × total nights`) and sum the value of only the correctly flagged bookings, instead of multiplying averages.
-7. Add a success rate for reminders (for example 30%, 50% and 100%), and find the break-even point where reminders stop paying off.
-8. Write down the reminder cost as a clear assumption, or use a more realistic figure.
-9. Choose the threshold based on money, not accuracy. Try thresholds from 0.1 to 0.9 and pick the one that saves the most.
-
 **Improve the model**
 
-10. Add ROC AUC to compare models across all thresholds.
-11. Tune XGBoost and Random Forest settings (depth, number of trees, learning rate), using a validation set from the training years.
-12. Look at XGBoost feature importance, and compare it with the Logistic Regression coefficients.
-13. Try separate models for the City Hotel and the Resort Hotel.
+1. Add ROC AUC to compare models across all thresholds.
+2. Tune XGBoost and Random Forest settings (depth, number of trees, learning rate), using a validation set from the training years.
+3. Look at XGBoost feature importance, and compare it with the Logistic Regression coefficients.
+4. Try separate models for the City Hotel and the Resort Hotel.
 
-**Tidy up**
-
-14. Remove the hardcoded row number in the `adr` cleanup (`df.drop(48515)`). Use a filter like `df[df["adr"] < 5000]` instead.
-15. Delete test and helper cells that are no longer used, like the `test` column and repeated `df.info()` calls.
-16. End the notebook with a short conclusion that answers the main question in one paragraph.
 
 ## How to run
 
